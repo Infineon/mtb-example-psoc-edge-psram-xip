@@ -6,7 +6,7 @@ This code example has a three project structure: CM33 secure, CM33 non-secure, a
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc-edge-psram-xip)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzg1NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zODU3OSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBQU1JBTSByZWFkLCB3cml0ZSwgYW5kIFNNSUYgY2FjaGUgb3BlcmF0aW9ucyIsInJpZCI6InBlZXl1c2gga3VtYXIiLCJEb2MgdmVyc2lvbiI6IjIuMC4wIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzg1NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zODU3OSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBQU1JBTSByZWFkLCB3cml0ZSwgYW5kIFNNSUYgY2FjaGUgb3BlcmF0aW9ucyIsInJpZCI6InBlZXl1c2gga3VtYXIiLCJEb2MgdmVyc2lvbiI6IjIuMC4xIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
 
 See the [Design and implementation](docs/design_and_implementation.md) for the functional description of this code example.
 
@@ -110,7 +110,8 @@ Document title: *CE238579* – *PSOC&trade; Edge MCU: PSRAM read, write, and SMI
  Version | Description of change
  ------- | ---------------------
  1.x.0   | New code example <br> Early access release
- 2.0.0   | GitHub release 
+ 2.0.0   | GitHub release
+ 2.0.1   | Removed se-rt-services-utils.mtb from the cm33_s project
 <br>
 
 
