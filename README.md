@@ -1,19 +1,19 @@
 # PSOC&trade; Edge MCU: PSRAM read, write, and SMIF cache operations
 
-This code example demonstrates how to interface an external PSRAM using the serial memory interface (SMIF) in Octal-SPI DDR mode in Infineon's PSOC&trade; Edge MCUs using the Serial memory library. It also demonstrates SMIF cache operations like clean and invalidate using Execute in Place (XIP) and Memory Mapped I/O (MMIO) modes.
+This code example demonstrates how to interface an external PSRAM using the serial memory interface (SMIF) in octal-SPI DDR mode in Infineon's PSOC&trade; Edge MCUs using the serial memory library. It also demonstrates SMIF cache operations like clean and invalidate using Execute in Place (XIP) and Memory Mapped I/O (MMIO) modes and SMIF XIP encryption and decryption.
 
 This code example has a three project structure: CM33 secure, CM33 non-secure, and CM55 projects. All three projects are programmed to the external QSPI flash and executed in XIP mode. Extended boot launches the CM33 secure project from a fixed location in the external flash, which then configures the protection settings and launches the CM33 non-secure application. Additionally, CM33 non-secure application enables CM55 CPU and launches the CM55 application. This application is in CM33 secure environment.
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc-edge-psram-xip)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzg1NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zODU3OSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBQU1JBTSByZWFkLCB3cml0ZSwgYW5kIFNNSUYgY2FjaGUgb3BlcmF0aW9ucyIsInJpZCI6InBlZXl1c2gga3VtYXIiLCJEb2MgdmVyc2lvbiI6IjIuMC4xIiwiRG9jIExhbmd1YWdlIjoiRW5nbGlzaCIsIkRvYyBEaXZpc2lvbiI6Ik1DRCIsIkRvYyBCVSI6IklDVyIsIkRvYyBGYW1pbHkiOiJQU09DIn0=)
+[Provide feedback on this code example.](https://yourvoice.infineon.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzg1NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zODU3OSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBQU1JBTSByZWFkLCB3cml0ZSwgYW5kIFNNSUYgY2FjaGUgb3BlcmF0aW9ucyIsInJpZCI6InBlZXl1c2gua3VtYXJAaW5maW5lb24uY29tIiwiRG9jIHZlcnNpb24iOiIyLjEuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
 
 See the [Design and implementation](docs/design_and_implementation.md) for the functional description of this code example.
 
 
 ## Requirements
 
-- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.6 or later (tested with v3.6)
+- [ModusToolbox&trade;](https://www.infineon.com/modustoolbox) v3.7 or later (tested with v3.7)
 - Board support package (BSP) minimum required version: 1.0.0
 - Programming language: C
 - Associated parts: All [PSOC&trade; Edge MCU](https://www.infineon.com/products/microcontroller/32-bit-psoc-arm-cortex/32-bit-psoc-edge-arm) parts
@@ -31,18 +31,15 @@ See the [Design and implementation](docs/design_and_implementation.md) for the f
 
 - [PSOC&trade; Edge E84 Evaluation Kit](https://www.infineon.com/KIT_PSE84_EVAL) (`KIT_PSE84_EVAL_EPC2`) – Default value of `TARGET`
 - [PSOC&trade; Edge E84 Evaluation Kit](https://www.infineon.com/KIT_PSE84_EVAL) (`KIT_PSE84_EVAL_EPC4`)
-- [PSOC&trade; Edge E84 AI Kit](https://www.infineon.com/KIT_PSE84_AI) (`KIT_PSE84_AI`)
 
 
 ## Hardware setup
 
 This example uses the board's default configuration. See the kit user guide to ensure that the board is configured correctly.
 
-Ensure the following jumper and pin configuration on board.
+Ensure the following jumper and pin configuration on board:
 - BOOT SW must be in the HIGH/ON position
-- J20 and J21 must be in the tristate/not connected (NC) position
-
-> **Note:** This hardware setup is not required for KIT_PSE84_AI.
+- J20 and J21 must be in the tristate/not connected (NC) position for the PSOC&trade; Edge E84 Evaluation Kit
 
 ## Software setup
 
@@ -61,7 +58,7 @@ See [Using the code example](docs/using_the_code_example.md) for instructions on
 
 2. Open a terminal program and select the KitProg3 COM port. Set the serial port parameters to 8N1 and 115200 baud
 
-3. Initially, test the SMIF operations with the cache disabled by setting the value of the `CACHE_ENABLE` macro  to '0' in *\<application\>/proj_cm33_s/main.c*. The value of this macro is '0' by default
+3. Initially, test the SMIF operations with the cache disabled and XIP encryption and decryption is disabled by setting the value of the `CACHE_ENABLE` and `XIP_ENCRYPT_ENABLE` macro to `0` in *\<application\>/proj_cm33_s/main.c*. The value of both macros is `0` by default
 
 4. After programming, the application starts automatically. Confirm that the following is displayed on the UART terminal
 
@@ -69,11 +66,11 @@ See [Using the code example](docs/using_the_code_example.md) for instructions on
 
    ![](images/cache-disable-output.png)
 
-   Since the SMIF cache is disabled, it is bypassed during read and write operations, and hence, the data read from or the data written to the memory address are the same   
+   Since the SMIF cache is disabled, it is bypassed during read and write operations, and hence, the data read from or the data written to the memory address are the same
 
-5. To demonstrate the SMIF cache operations, set the value of the `CACHE_ENABLE` macro to '1' in *\<application\>/proj_cm33_s/main.c*
+5. To demonstrate the SMIF cache operations, set the value of the `CACHE_ENABLE` macro to `1` in *\<application\>/proj_cm33_s/main.c*
 
-6. Build and program the application using Step 4
+6. Build and program the application using step 4
 
 7. After programming, the application starts automatically. Confirm that the following is displayed on the UART terminal:
 
@@ -82,6 +79,20 @@ See [Using the code example](docs/using_the_code_example.md) for instructions on
    ![](images/cache-enable-output.png)
 
    Since the SMIF cache is enabled, the actual data change in the cache or target memory appear after the clean and invalidate operations, as shown in terminal output
+
+8. To demonstrate the SMIF XIP encryption and decryption operations, set the value of the `XIP_ENCRYPT_ENABLE` macro to '1' in *\<application\>/proj_cm33_s/main.c*
+
+   > **Note:** When `XIP_ENCRYPT_ENABLE` is set to `1U`, the `CACHE_ENABLE` macro should be set to `0U` (the cache-disabled path), as the encryption demo operates in the non-cache code path.
+
+9. Clean, build, and program the application as per the steps provided in the operation section
+
+7. After programming, the application starts automatically. Confirm that the following is displayed on the UART terminal:
+
+   **Figure 3. Terminal output when XIP encryption and decryption enabled**
+
+   ![](images/smif-xip-encryption-decryption-enable.png)
+
+   Since XIP encryption and decryption is enabled, the encrypted data is written to PSRAM in MMIO mode, and when the same address is read in XIP mode the SMIF hardware automatically decrypts the data on-the-fly, producing output that matches the original plaintext test data, as shown in terminal output
 
 
 ## Related resources
@@ -112,6 +123,7 @@ Document title: *CE238579* – *PSOC&trade; Edge MCU: PSRAM read, write, and SMI
  1.x.0   | New code example <br> Early access release
  2.0.0   | GitHub release
  2.0.1   | Removed se-rt-services-utils.mtb from the cm33_s project
+ 2.1.0   | Added SMIF XIP encryption and decryption operations
 <br>
 
 
@@ -123,8 +135,7 @@ PSOC&trade;, formerly known as PSoC&trade;, is a trademark of Infineon Technolog
 
 ---------------------------------------------------------
 
-© Cypress Semiconductor Corporation, 2023-2025. This document is the property of Cypress Semiconductor Corporation, an Infineon Technologies company, and its affiliates ("Cypress").  This document, including any software or firmware included or referenced in this document ("Software"), is owned by Cypress under the intellectual property laws and treaties of the United States and other countries worldwide.  Cypress reserves all rights under such laws and treaties and does not, except as specifically stated in this paragraph, grant any license under its patents, copyrights, trademarks, or other intellectual property rights.  If the Software is not accompanied by a license agreement and you do not otherwise have a written agreement with Cypress governing the use of the Software, then Cypress hereby grants you a personal, non-exclusive, nontransferable license (without the right to sublicense) (1) under its copyright rights in the Software (a) for Software provided in source code form, to modify and reproduce the Software solely for use with Cypress hardware products, only internally within your organization, and (b) to distribute the Software in binary code form externally to end users (either directly or indirectly through resellers and distributors), solely for use on Cypress hardware product units, and (2) under those claims of Cypress's patents that are infringed by the Software (as provided by Cypress, unmodified) to make, use, distribute, and import the Software solely for use with Cypress hardware products.  Any other use, reproduction, modification, translation, or compilation of the Software is prohibited.
+(c) 2026, Infineon Technologies AG, or an affiliate of Infineon Technologies AG. All rights reserved.
+This software, associated documentation and materials ("Software") is owned by Infineon Technologies AG or one of its affiliates ("Infineon") and is protected by and subject to worldwide patent protection, worldwide copyright laws, and international treaty provisions. Therefore, you may use this Software only as provided in the license agreement accompanying the software package from which you obtained this Software. If no license agreement applies, then any use, reproduction, modification, translation, or compilation of this Software is prohibited without the express written permission of Infineon.
 <br>
-TO THE EXTENT PERMITTED BY APPLICABLE LAW, CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS DOCUMENT OR ANY SOFTWARE OR ACCOMPANYING HARDWARE, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  No computing device can be absolutely secure.  Therefore, despite security measures implemented in Cypress hardware or software products, Cypress shall have no liability arising out of any security breach, such as unauthorized access to or use of a Cypress product. CYPRESS DOES NOT REPRESENT, WARRANT, OR GUARANTEE THAT CYPRESS PRODUCTS, OR SYSTEMS CREATED USING CYPRESS PRODUCTS, WILL BE FREE FROM CORRUPTION, ATTACK, VIRUSES, INTERFERENCE, HACKING, DATA LOSS OR THEFT, OR OTHER SECURITY INTRUSION (collectively, "Security Breach").  Cypress disclaims any liability relating to any Security Breach, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any Security Breach.  In addition, the products described in these materials may contain design defects or errors known as errata which may cause the product to deviate from published specifications. To the extent permitted by applicable law, Cypress reserves the right to make changes to this document without further notice. Cypress does not assume any liability arising out of the application or use of any product or circuit described in this document. Any information provided in this document, including any sample design information or programming code, is provided only for reference purposes.  It is the responsibility of the user of this document to properly design, program, and test the functionality and safety of any application made of this information and any resulting product.  "High-Risk Device" means any device or system whose failure could cause personal injury, death, or property damage.  Examples of High-Risk Devices are weapons, nuclear installations, surgical implants, and other medical devices.  "Critical Component" means any component of a High-Risk Device whose failure to perform can be reasonably expected to cause, directly or indirectly, the failure of the High-Risk Device, or to affect its safety or effectiveness.  Cypress is not liable, in whole or in part, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any use of a Cypress product as a Critical Component in a High-Risk Device. You shall indemnify and hold Cypress, including its affiliates, and its directors, officers, employees, agents, distributors, and assigns harmless from and against all claims, costs, damages, and expenses, arising out of any claim, including claims for product liability, personal injury or death, or property damage arising from any use of a Cypress product as a Critical Component in a High-Risk Device. Cypress products are not intended or authorized for use as a Critical Component in any High-Risk Device except to the limited extent that (i) Cypress's published data sheet for the product explicitly states Cypress has qualified the product for use in a specific High-Risk Device, or (ii) Cypress has given you advance written authorization to use the product as a Critical Component in the specific High-Risk Device and you have signed a separate indemnification agreement.
-<br>
-Cypress, the Cypress logo, and combinations thereof, ModusToolbox, PSoC, CAPSENSE, EZ-USB, F-RAM, and TRAVEO are trademarks or registered trademarks of Cypress or a subsidiary of Cypress in the United States or in other countries. For a more complete list of Cypress trademarks, visit www.infineon.com. Other names and brands may be claimed as property of their respective owners.
+Disclaimer: UNLESS OTHERWISE EXPRESSLY AGREED WITH INFINEON, THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, ALL WARRANTIES OF NON-INFRINGEMENT OF THIRD-PARTY RIGHTS AND IMPLIED WARRANTIES SUCH AS WARRANTIES OF FITNESS FOR A SPECIFIC USE/PURPOSE OR MERCHANTABILITY. Infineon reserves the right to make changes to the Software without notice. You are responsible for properly designing, programming, and testing the functionality and safety of your intended application of the Software, as well as complying with any legal requirements related to its use. Infineon does not guarantee that the Software will be free from intrusion, data theft or loss, or other breaches (“Security Breaches”), and Infineon shall have no liability arising out of any Security Breaches. Unless otherwise explicitly approved by Infineon, the Software may not be used in any application where a failure of the Product or any consequences of the use thereof can reasonably be expected to result in personal injury.

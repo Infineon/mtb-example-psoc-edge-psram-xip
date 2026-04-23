@@ -34,4 +34,23 @@ XIP and MMIO modes are used to demonstrate cache operations in this code example
 
    - **Cache invalidate:** Data is written to the target memory address in MMIO mode, upon reading the same address using XIP mode, the data is different from what was written. when performing cache invalidation, the data from the target memory now moves to the cache, the same is shown in the terminal output.
 
+- **SMIF XIP encryption and decryption is enabled:** the example demonstrates AES-128 encryption and On-the-fly (OTF) decryption of data stored in PSRAM. This feature leverages the SMIF hardware crypto engine to encrypt data before writing it to memory and automatically decrypt it when reading back through XIP mode, ensuring data confidentiality without software overhead during read operations. The XIP encryption flow works as follows:
+
+   - A 128-bit AES key and 96-bit IV are configured, the test data is encrypted in software, and crypto region is set up with On-the-fly hardware decryption enabled for the PSRAM slave select.
+
+   - The encrypted data is written to PSRAM in MMIO mode, and when the same address is read in XIP mode the SMIF hardware automatically decrypts the data On-the-fly, producing output that matches the original plaintext test data.
+
+   > **Note:** When `XIP_ENCRYPT_ENABLE` is set to `1U`, the SMIF mode is switched to XIP (`CY_SMIF_MEMORY`) mode explicitly after crypto configuration, and On-the-fly decryption is managed by the SMIF hardware crypto engine.
+
+### Configuration macros
+
+The following macros in *\<application\>/proj_cm33_s/main.c* control the application behavior:
+
+Macro | Default value | Description
+------|---------------|------------
+`CACHE_ENABLE` | `0U` | Set to `1U` to enable SMIF cache and demonstrate cache clean and invalidation operations
+`XIP_ENCRYPT_ENABLE` | `0U` | Set to `1U` to enable SMIF XIP encryption and decryption demo
+
+> **Note:** When `XIP_ENCRYPT_ENABLE` is set to `1U`, the `CACHE_ENABLE` macro should be set to `0U` (the cache-disabled path), as the encryption demo operates in the non-cache code path. SMIF XIP encryption and decryption can be implemented when the SMIF cache is enabled, the same approach can be followed, However please ensure to invalidate the cache or any other system level cache to be cleared so that the next read/execute from flash operation results in correct data.
+
 <br>
