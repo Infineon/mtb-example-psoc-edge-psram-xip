@@ -3,10 +3,11 @@
 This code example demonstrates how to interface an external PSRAM using the serial memory interface (SMIF) in octal-SPI DDR mode in Infineon's PSOC&trade; Edge MCUs using the serial memory library. It also demonstrates SMIF cache operations like clean and invalidate using Execute in Place (XIP) and Memory Mapped I/O (MMIO) modes and SMIF XIP encryption and decryption.
 
 This code example has a three project structure: CM33 secure, CM33 non-secure, and CM55 projects. All three projects are programmed to the external QSPI flash and executed in XIP mode. Extended boot launches the CM33 secure project from a fixed location in the external flash, which then configures the protection settings and launches the CM33 non-secure application. Additionally, CM33 non-secure application enables CM55 CPU and launches the CM55 application. This application is in CM33 secure environment.
+> **Note:** On the KIT_PSE84_HMI, all three projects are programmed to the external OSPI flash instead of QSPI.
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-psoc-edge-psram-xip)
 
-[Provide feedback on this code example.](https://yourvoice.infineon.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzg1NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zODU3OSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBQU1JBTSByZWFkLCB3cml0ZSwgYW5kIFNNSUYgY2FjaGUgb3BlcmF0aW9ucyIsInJpZCI6InBlZXl1c2gua3VtYXJAaW5maW5lb24uY29tIiwiRG9jIHZlcnNpb24iOiIyLjEuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this code example.](https://yourvoice.infineon.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzg1NzkiLCJTcGVjIE51bWJlciI6IjAwMi0zODU3OSIsIkRvYyBUaXRsZSI6IlBTT0MmdHJhZGU7IEVkZ2UgTUNVOiBQU1JBTSByZWFkLCB3cml0ZSwgYW5kIFNNSUYgY2FjaGUgb3BlcmF0aW9ucyIsInJpZCI6InBlZXl1c2gua3VtYXJAaW5maW5lb24uY29tIiwiRG9jIHZlcnNpb24iOiIyLjIuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
 
 See the [Design and implementation](docs/design_and_implementation.md) for the functional description of this code example.
 
@@ -31,7 +32,7 @@ See the [Design and implementation](docs/design_and_implementation.md) for the f
 
 - [PSOC&trade; Edge E84 Evaluation Kit](https://www.infineon.com/KIT_PSE84_EVAL) (`KIT_PSE84_EVAL_EPC2`) – Default value of `TARGET`
 - [PSOC&trade; Edge E84 Evaluation Kit](https://www.infineon.com/KIT_PSE84_EVAL) (`KIT_PSE84_EVAL_EPC4`)
-
+- [PSOC&trade; Edge E84 HMI Kit](https://www.infineon.com/KIT_PSE84_HMI) (`KIT_PSE84_HMI`)
 
 ## Hardware setup
 
@@ -124,6 +125,7 @@ Document title: *CE238579* – *PSOC&trade; Edge MCU: PSRAM read, write, and SMI
  2.0.0   | GitHub release
  2.0.1   | Removed se-rt-services-utils.mtb from the cm33_s project
  2.1.0   | Added SMIF XIP encryption and decryption operations
+ 2.2.0   | Added support for KIT_PSE84_HMI
 <br>
 
 
